@@ -60,14 +60,16 @@ public class WeightedInterval {
      *                    that is compatible with jobs[j]
      */
     public static int [] prior(Job[] jobs) {
-		int[] result = new int[jobs.length - 1];
-		for(int i = jobs.length-1; i > 0; i--){
-			for(int j = i - 1; j > 0; j--){
-				if(jobs[i].start == jobs[j].finish){
-					result[i-1] = j;
+		int[] result = new int[jobs.length];
+		for(int i = 1; i < jobs.length; i++){
+			for(int j = i+1; j < jobs.length; j++){
+				if(jobs[j].start >= jobs[i].finish){
+					result[j] = i;
 				}
 			}
 		}
+		System.out.println(Arrays.toString(jobs));
+		System.out.println(Arrays.toString(result));
 		return result;
     }
 
@@ -86,7 +88,7 @@ public class WeightedInterval {
 			return 0;
 		}
 		else{
-			return Math.max(jobs[j-1].weight + optR(jobs, p, p[j-1]), optR(jobs, p, j-1));
+			return Math.max(jobs[j].weight + optR(jobs, p, p[j]), optR(jobs, p, j-1));
 		}
     }
 
@@ -98,20 +100,26 @@ public class WeightedInterval {
      * return max sum of weights of compatible jobs
      */    
     public static int optMem(Job[] jobs, int[] p) {
-
-		return 0;
+		M = new int[jobs.length];
+		M[0] = 0;
+		for(int i = 1; i < jobs.length; i++){
+			if(M[i] == 0){
+				M[i] = Math.max(jobs[i].weight + M[p[i]], M[i-1]);
+			}
+		}
+		System.out.println(Arrays.toString(M));
+		return M[jobs.length-1];
     }
 
 
     // go through array M to find and list of jobs that are part of the
     // maximum value solution
     public static void showSolution(Job [] jobs, int [] p) {
-	showSolution(jobs, p, jobs.length-1);
+		showSolution(jobs, p, jobs.length-1);
     }
 
     public static void showSolution(Job[] jobs, int [] p, int j) {
-	// FINISH ME
-	return;
+
     }    
 
 }
