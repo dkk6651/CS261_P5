@@ -1,3 +1,9 @@
+/**
+ * File Name: SubsetSum.java
+ * Author: Daniel Kee Kim
+ * Description: Subset Sum algorithm implemented in both recursive and memoization methods.
+ */
+
 import java.util.*;
 import java.io.*;
 
@@ -40,10 +46,25 @@ public class SubsetSum{
      *                    that is compatible with jobs[j]
      */
     public static int subsetSumMem(int [] itemWts, int W) {
-        M = new int [itemWts.length][W+1];
-	// FINISH ME
-	return 0;
+		if(W == 0) return 0;
+		int n = itemWts.length-1;
 
+		M = new int[n+1][W+1];
+		for(int i = 0; i <= W; i++){
+			M[0][i] = 0;
+		}
+
+        for(int i = 1; i <= n; i++){
+			for(int w = 0; w <= W; w++){
+				if(w < itemWts[i]){
+					M[i][w] = M[i-1][w];
+				}
+				else{
+					M[i][w] = Math.max(M[i-1][w], itemWts[i] + M[i-1][w - itemWts[i]]);
+				}
+			}
+		}
+        return M[n][W];
     }
 
     /**
@@ -56,9 +77,15 @@ public class SubsetSum{
      *                    that is compatible with jobs[j]
      */
     public static int subsetSumR(int [] itemWts, int w, int i) {
-
-	// FINISH ME
-	return 0;
+    	if(i == 0){
+    		return 0;
+		}
+    	else if(itemWts[i] > w){
+    		return subsetSumR(itemWts, w, i-1);
+		}
+    	else{
+    		return Math.max(subsetSumR(itemWts, w, i-1), itemWts[i] + subsetSumR(itemWts, w - itemWts[i], i-1));
+		}
     }
 
     /**
@@ -71,7 +98,16 @@ public class SubsetSum{
      *                    that is compatible with jobs[j]
      */
     public static void showSolution(int [] itemWts, int w, int i) {
-	// FINISH ME
+		if(M[i][w] == 0){
+			return;
+		}
+		else if(M[i][w] > M[i-1][w]){
+			System.out.printf("item %d wt: %d\n", i, itemWts[i]);
+			showSolution(itemWts, w - itemWts[i], i-1);
+		}
+		else{
+			showSolution(itemWts, w, i-1);
+		}
     }
     
 }

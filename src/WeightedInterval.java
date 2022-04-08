@@ -1,3 +1,9 @@
+/**
+ * File Name: WeightedInterval.java
+ * Author: Daniel Kee Kim
+ * Description: Full implementation of Weighted Interval Scheduling program.
+ */
+
 import java.util.*;
 import java.io.*;
 
@@ -119,7 +125,16 @@ public class WeightedInterval {
     }
 
     public static void showSolution(Job[] jobs, int [] p, int j) {
-
-    }    
+		if(j == 0){
+			return;
+		}
+		else if(jobs[j].weight + M[p[j]] > M[j-1]){
+			System.out.printf("Job:%d %d --> %d wt: %d\n", jobs[j].number, jobs[j].start, jobs[j].finish, jobs[j].weight);
+			showSolution(jobs, p, p[j]);
+		}
+		else{
+			showSolution(jobs, p, j-1);
+		}
+    }
 
 }
